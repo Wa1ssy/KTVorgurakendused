@@ -16,54 +16,54 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Test>> GetTests(string? name = null)
+    public ActionResult<IEnumerable<Movie>> GetMovies(string? name = null)
     {
-        var query = _context.Tests!.AsQueryable();
+        var query = _context.Movies!.AsQueryable();
 
         if (name != null)
-            query = query.Where(x => x.Name != null && x.Name.ToUpper().Contains(name.ToUpper()));
+            query = query.Where(x => x.Title != null && x.Title.ToUpper().Contains(name.ToUpper()));
 
         return query.ToList();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TextReader> GetTest(int id)
+    public ActionResult<TextReader> GetMovie(int id)
     {
-        var test = _context.Tests!.Find(id);
+        var movi = _context.Movies!.Find(id);
 
-        if (test == null)
+        if (movi == null)
         {
             return NotFound();
         }
 
-        return Ok(test);
+        return Ok(movi);
     }
 
     [HttpPut("{id}")]
-    public IActionResult PutTest(int id, Test test)
+    public IActionResult PutMovie(int id, Movie movi)
     {
-        var dbTest = _context.Tests!.AsNoTracking().FirstOrDefault(x => x.Id == test.Id);
-        if (id != test.Id || dbTest == null)
+        var dbTest = _context.Movies!.AsNoTracking().FirstOrDefault(x => x.Id == movi.Id);
+        if (id != movi.Id || dbTest == null)
         {
             return NotFound();
         }
 
-        _context.Update(test);
+        _context.Update(movi);
         _context.SaveChanges();
 
         return NoContent();
     }
 
     [HttpPost]
-    public ActionResult<Test> PostTest(Test test)
+    public ActionResult<Movie> PostMovie(Movie movi)
     {
-        var dbExercise = _context.Tests!.Find(test.Id);
+        var dbExercise = _context.Movies!.Find(movi.Id);
         if (dbExercise == null)
         {
-            _context.Add(test);
+            _context.Add(movi);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetTest), new { Id = test.Id }, test);
+            return CreatedAtAction(nameof(GetMovie), new { Id = movi.Id }, movi);
         }
         else
         {
@@ -72,15 +72,15 @@ public class MoviesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteTest(int id)
+    public IActionResult DeleteMovie(int id)
     {
-        var test = _context.Tests!.Find(id);
-        if (test == null)
+        var movi = _context.Movies!.Find(id);
+        if (movi == null)
         {
             return NotFound();
         }
 
-        _context.Remove(test);
+        _context.Remove(movi);
         _context.SaveChanges();
 
         return NoContent();

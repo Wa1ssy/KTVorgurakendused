@@ -5,5 +5,5 @@ public class Ticket
     public int Id { get; set; }
     public int SessionId { get; set; }
     public string SeatNo { get; set; }
-    public string Price { get; set; }
+    public float Price { get; set; }
 }

@@ -16,54 +16,54 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Test>> GetTests(string? name = null)
+    public ActionResult<IEnumerable<Ticket>> GetTickets(string? name = null)
     {
-        var query = _context.Tests!.AsQueryable();
+        var query = _context.Tickets!.AsQueryable();
 
         if (name != null)
-            query = query.Where(x => x.Name != null && x.Name.ToUpper().Contains(name.ToUpper()));
+            query = query.Where(x => x.SeatNo != null && x.SeatNo.ToUpper().Contains(name.ToUpper()));
 
         return query.ToList();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TextReader> GetTest(int id)
+    public ActionResult<TextReader> GetTicket(int id)
     {
-        var test = _context.Tests!.Find(id);
+        var tick = _context.Tickets!.Find(id);
 
-        if (test == null)
+        if (tick == null)
         {
-            return NotFound();
+            return BadRequest();
         }
 
-        return Ok(test);
+        return Ok(tick);
     }
 
     [HttpPut("{id}")]
-    public IActionResult PutTest(int id, Test test)
+    public IActionResult PutTicket(int id, Ticket tick)
     {
-        var dbTest = _context.Tests!.AsNoTracking().FirstOrDefault(x => x.Id == test.Id);
-        if (id != test.Id || dbTest == null)
+        var dbTest = _context.Tickets!.AsNoTracking().FirstOrDefault(x => x.Id == tick.Id);
+        if (id != tick.Id || dbTest == null)
         {
             return NotFound();
         }
 
-        _context.Update(test);
+        _context.Update(tick);
         _context.SaveChanges();
 
         return NoContent();
     }
 
     [HttpPost]
-    public ActionResult<Test> PostTest(Test test)
+    public ActionResult<Ticket> PostTicket(Ticket tick)
     {
-        var dbExercise = _context.Tests!.Find(test.Id);
+        var dbExercise = _context.Tests!.Find(tick.Id);
         if (dbExercise == null)
         {
-            _context.Add(test);
+            _context.Add(tick);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetTest), new { Id = test.Id }, test);
+            return CreatedAtAction(nameof(GetTicket), new { Id = tick.Id }, tick);
         }
         else
         {
@@ -72,15 +72,15 @@ public class TicketsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteTest(int id)
+    public IActionResult DeleteTicket(int id)
     {
-        var test = _context.Tests!.Find(id);
-        if (test == null)
+        var tick = _context.Tickets!.Find(id);
+        if (tick == null)
         {
             return NotFound();
         }
 
-        _context.Remove(test);
+        _context.Remove(tick);
         _context.SaveChanges();
 
         return NoContent();

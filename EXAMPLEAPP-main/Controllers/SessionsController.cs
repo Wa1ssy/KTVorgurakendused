@@ -16,54 +16,55 @@ public class SessionsController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Test>> GetTests(string? name = null)
+    public ActionResult<IEnumerable<Session>> GetSessions(string? name = null)
     {
-        var query = _context.Tests!.AsQueryable();
+
+        var query = _context.Sessions!.AsQueryable();
 
         if (name != null)
-            query = query.Where(x => x.Name != null && x.Name.ToUpper().Contains(name.ToUpper()));
+            query = query.Where(x => x.AuditoriumName != null && x.AuditoriumName.ToUpper().Contains(name.ToUpper()));
 
         return query.ToList();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TextReader> GetTest(int id)
+    public ActionResult<TextReader> GetSession(int id)
     {
-        var test = _context.Tests!.Find(id);
+        var sess = _context.Sessions!.Find(id);
 
-        if (test == null)
+        if (sess == null)
         {
-            return NotFound();
+            return BadRequest();
         }
 
-        return Ok(test);
+        return Ok(sess);
     }
 
     [HttpPut("{id}")]
-    public IActionResult PutTest(int id, Test test)
+    public IActionResult PutSession(int id, Session sess)
     {
-        var dbTest = _context.Tests!.AsNoTracking().FirstOrDefault(x => x.Id == test.Id);
-        if (id != test.Id || dbTest == null)
+        var dbTest = _context.Sessions!.AsNoTracking().FirstOrDefault(x => x.Id == sess.Id);
+        if (id != sess.Id || dbTest == null)
         {
             return NotFound();
         }
 
-        _context.Update(test);
+        _context.Update(sess);
         _context.SaveChanges();
 
         return NoContent();
     }
 
     [HttpPost]
-    public ActionResult<Test> PostTest(Test test)
+    public ActionResult<Session> PostSession(Session sess)
     {
-        var dbExercise = _context.Tests!.Find(test.Id);
+        var dbExercise = _context.Sessions!.Find(sess.Id);
         if (dbExercise == null)
         {
-            _context.Add(test);
+            _context.Add(sess);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetTest), new { Id = test.Id }, test);
+            return CreatedAtAction(nameof(GetSession), new { Id = sess.Id }, sess);
         }
         else
         {
@@ -72,15 +73,15 @@ public class SessionsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteTest(int id)
+    public IActionResult DeleteSession(int id)
     {
-        var test = _context.Tests!.Find(id);
-        if (test == null)
+        var sess = _context.Sessions!.Find(id);
+        if (sess == null)
         {
             return NotFound();
         }
 
-        _context.Remove(test);
+        _context.Remove(sess);
         _context.SaveChanges();
 
         return NoContent();
